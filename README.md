@@ -101,8 +101,3 @@ Notes
     The wrapper script sets all required environment variables — no hard-coded paths.
 
     Works on macOS and Linux.
-
-Enjoy using SAN12!
-
-If you'd like a more styled README (badges, screenshots, sections), I can generate that too.
-

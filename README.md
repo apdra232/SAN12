@@ -25,7 +25,7 @@ Install core dependencies:
 
 ```bash
 python3.11 -m pip install numpy matplotlib
-
+```
 Project Files
 
 SAN2015-01.for     # Fortran SAN12 engine
@@ -36,7 +36,12 @@ Building
 
 Compile the Fortran executable:
 
+```bash
 make
+make install
+```
+
+Make install may require sudo
 
 Produces:
 
@@ -59,13 +64,13 @@ This will:
     Install a launcher script san12 into /usr/local/bin
 
 Run SAN12 from anywhere:
-
+```bash
 san12
+```
 
-Running
-Launch GUI
+Launches GUI
 
-san12
+See san12.help for details of input file
 
 Command-line mode
 

@@ -1,6 +1,6 @@
 # **SAN12 — Fortran + Python GUI System**
 
-SAN12 provides a graphical front-end (`fit_gui.py`) for the Fortran spectrum-analysis engine `san2015`.  
+SAN12 provides a graphical front-end (`san12_gui.py`) for the Fortran spectrum-analysis engine `san2015`.  
 A global command **`san12`** is installed so the GUI can be launched from any terminal.
 
 ---
@@ -29,7 +29,7 @@ python3.11 -m pip install numpy matplotlib
 Project Files
 
 SAN2015-01.for     # Fortran SAN12 engine
-fit_gui.py         # Python GUI + CLI
+san12_gui.py         # Python GUI + CLI
 Makefile           # Build + install system
 
 Building
@@ -52,7 +52,7 @@ This will:
 
     Detect your Python version
 
-    Update the shebang in fit_gui.py
+    Update the shebang in san12_gui.py
 
     Install san2015 into /usr/local/bin
 
@@ -69,14 +69,14 @@ san12
 
 Command-line mode
 
-python fit_gui.py input.inp
+python san12_gui.py input.inp
 
 Other examples:
 
-python fit_gui.py --convert spectrum.root     # Convert ROOT → DAF
-python fit_gui.py --plot run_output           # Plot an existing run
-python fit_gui.py input.inp --no-save         # Run without output folder
-python fit_gui.py input.inp --folder my_run   # Custom folder name
+python san12_gui.py --convert spectrum.root     # Convert ROOT → DAF
+python san12_gui.py --plot run_output           # Plot an existing run
+python san12_gui.py input.inp --no-save         # Run without output folder
+python san12_gui.py input.inp --folder my_run   # Custom folder name
 
 Cleaning
 

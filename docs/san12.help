@@ -1,0 +1,312 @@
+*********************************************************************** 
+       Instructions for NEWSAN12.    VAX version.  SEPT. 18, 1990 
+       THE PROGRAM NEWSAN12 IS CONTAINED IN [WILLIAMS.SAN12]
+       For update info, see beginning of newsan12.for.
+     There is 1 input file and 1 output file.  The output
+     file gives the results of the program, yields and final
+     parameters.  The output file will be called SORTSAN.DAT.
+     The input file format is described below. 
+  
+  
+*********************************************************************** 
+     All formats are free field unless noted otherwise. 
+  Line 1.  TERMINAL TYPE
+ 
+  Line 2.  Read_from_file
+           IF ONE WANTS TO USED THE TITLE STORED WITH THE HISTOGRAM
+           INPUT LINE 2 EXACTLY AS ABOVE
+
+           HOWEVER IF ONE WISHES TO USE LINE 3 TO INPUT THE TITLE
+           INPUT LINE 1 WITH THE SAME CHARACTER BUT SHIFT TOWARD 
+           RIGHT BY 1 COLUMN.
+ 
+  Line 3.  Title.    Format A30
+
+  Line 4.  filename  
+
+  Line 5.  NSPC,INTRA,NCHI 
+  
+           NSPC is the spectrum number. 
+  
+           INTRA:  0  to see intermediate output at your terminal.
+                      This will cause SAN12 to run much slower!
+  
+                   1  Not used. 
+  
+                   2  The intermediate output is not displayed.
+                      
+           NCHI    This determines the method of weighting chi square.
+  
+                   0:   CHI2= (C(i)-Y(i))**2/ Y(i)  (SUM OVER i)
+  
+                   1:   CHI2= (C(i)-Y(i))**2/ SQRT(Y(i)) (SUM OVER i)
+  
+                  >1:   CHI2= (C(i)-Y(i))**2/ (Y(i)+NCHI) (SUM OVER i)
+  
+                        C(i) is the value calculated by SALLY.
+                        X(i) is the weighting value.  This is a second
+                        spectrum read by the program. 
+  
+  
+  Line 6.  MUL,NREF,NUOP,ICHO
+  
+           MUL    Number of kinnematic grups; this can be zero.
+                  MUL=1 if only scattering from a single isotope,
+                  MUL=2 if scattering from 2 isotopes, etc.  
+
+           NREF   The reference peak. All kinematic calculations are
+                  based on this peak, including width calculations for
+                  SIGR.   NREF equal the reference peak which is the
+                  peak number in input line 9.
+                  NREF should usually be for the elastic or most prominent
+                  peak,  ie  NREF=1 which is the first peak entered on
+                  line 9.
+                   
+          NUOP =0 for linear SIG(j); ie the width of inelastic peaks. 
+               =1 for nonlinear SIG(j) using delta E and delta T in the
+                  extra parms. 
+                  See Extra parameters. 
+  
+          ICHO  =0 to use the channel 0 that is input in the extra parms.
+                   For this case input peak positions are ignored.  All
+                   peak positions are calculated kinematically.  
+                   Channel 0 is where time begins.  
+                =1 to calculate channel 0 from En and the reference 
+                   peak position. 
+  
+  Line 6a. MULG(i),IMULG(i), (i=1,MUL)
+           This is read only if (MUL .ge. 1). 
+           They are the indices (peak numbers of line 9) of the first 
+           of the last peaks for each kinematic group; that is,
+           MULG = Peak no. of 1st peak in group to be fitted together. 
+           IMULG = Peak no. of last rgoup in peak to be fitted together.
+
+ 
+  Line 7.  ILC1,ILC2,IHC1,IHC2,NCHAN,IFIT,JSKPY 
+  
+           ILC1 & ILC2    This is the lower background region.
+           IHC1 & IHC2    This is the upper background region.
+          
+           <NOTE> IF ONE WISH TO INPUT A LINEAR BACKGROUND SET ILC1=1
+                  THEN   SLOP = (ILC2-IHC2)/(ILC1-IHC1)
+                         INTERCEPT = SLOP*ILC1-ILC2
+
+           NCHAN   The number of channels used to smooth over
+                   the low and high background regions.  (0 or n >/= 1)
+           IFIT    Fit parameter. 
+  
+             0     Double Gaussian
+             1     Single Gaussian + exp tail 
+             2     Asymmetric Gaussian + exp tail 
+             3     Double Gaussian + exp tail 
+             4     ?
+             5     Single Gaussian + exp tail + linear tail.
+             6     Asymeteric gaussian + exp tail + linear tail.
+  
+           JSKPY   1  if regions are to be skipped when calculating 
+                      the chi square. 
+                   0  to include all channels in the chi square calculation.
+  
+  Line 7a. ISKPY(i,1),ISKPY(i,2),JSKPY
+  
+           Line 7a is read only if JSKPY in Line 7 is 1.
+  
+           ISKPY(i,1),ISKPY(i,2)   These are the lower and upper
+                                   channel numbers of the region to 
+                                   be excluded from the chi-square
+                                   calculation. 
+  
+           JSKPY =0    Go to card 8.
+                 =1    Read another excluded region. (up to 10).
+  
+  
+  Line 8.  ISTART,IEND,NPEAK,ISMF
+  
+           ISTART,IEND     Beginning and ending channel numbers 
+                           for the region to be fit.
+           NPEAK           Total number of peaks to be fit. 
+           ISMF            Number of channels for channel by channel folding
+                           function, see line 8a. 
+  
+  Line 8a. ISMR(j),(j=1,ISMF)    This is not read if ISMF=0.
+                           These are the values of the folding function 
+                            by channel. 
+  
+    
+  Line 9. A(i,2)  i=1,NPEAK
+                            These are the peak positions. (channel numbers) 
+                            If all peaks are included in groups, then only
+                            the position of the reference peak must be given. 
+                            The other peak positions will be calculated 
+                            kinematically.   However, zeros must be 
+                            included,  see note on free field formats 
+                            at the end of instructions. 
+                            If ICH0 was set to zero above, then only
+                            zeros need be entered for the peak positions
+                            as they will be calculated kinematically. 
+
+
+  Line 10. IPAR(i) i=1,NPEAK          FREE FIELD FORMAT!
+  
+           IPAR(i)=0     The position of peak i is varied to give the 
+                         best fit.
+                  =1     The position of peak is held constant during 
+                         the search.
+  
+  Line 11. A(i,1), i=1,NPEAK
+                         Starting point for the peak height.  If
+                         zeros are input the program will pick a
+                         starting height. 
+  
+  Line 12. IPAR(j), j=1,NPEAK     FREE FIELD FORMAT!
+  
+           IPAR(j)=0     Height of peak j is freely varied to obtain
+                         the best fit.
+                  =1     The height of peak j is held constant. 
+                  =2     The height of peak j is held inside the
+                         window defined by line 12a.
+  
+   Line 12a. AVARY(j), j=1,NPEAK
+                         Line 12a is read only if one of the IPAR(j) on 
+                         Line 12 was 2.   If IPAR(j) is 2, then the height
+                         of peak j is varied only inside the window defined 
+                         by:  A(j,1) +/- AVARY(j) where A(j,1)  is the
+                         input value of the peak height.
+  
+  
+   Line 13.  PARM(i),i=1,10     Extra parameters. 
+  
+       PARM(1)    DT            Delta t,  time spread.
+            2)    Ratio         See below.
+            3)    SIGR          Width, See below. 
+            4)    DIST          See below.
+            5)    PJON          See below.
+            6)    SLOP1         See below.
+            7)    Qgs(2)        Second Q value (when mul>2) 
+            8)    Qgs           Q value of the ground state, group 1. 
+            9)    CHZ           The channel corresponding to t=0, 
+           10)    DE            The neutron energy spread as they 
+                                leave the target, delta E.
+    NOTE!!!
+    Update Sept. 1990 replaced e1 as an extra parm. with qgs(2).  If you
+    are searching over only one kinematic group, the program will ignore
+    whatever you put for extra parm. #7.  
+  --------------------------------------------------------------------- 
+            The above are for NUOP=1, non-linear width function 
+            For NUOP=0 (linear width function), replace 
+            PARM(1) with RM, and PARM(3) with RB
+  
+  
+            If NUOP=0, then 
+  
+            SIG(j)=RM*Channel  + RB 
+  
+            Where  RM=Slope 
+                   RB=Intercept 
+  
+            If NUOP=1, then 
+  
+            Sig(j)=(((dt**2+dtn(j)**2)/(dt**2+dtn(NREF)**2))**.5)*SIGR
+  
+            Where  dtn=(t/2*E)*DE 
+  
+  ----------------------------------------------------------------------
+  
+            IFIT=0,   Double Gaussian 
+  
+             RATIO is the ratio  of the 2nd gaussian to the 
+                      main gaussian.
+             DIST*SIG = Channels from the main gaussian to the
+                        2nd gaussian. 
+  
+  ----------------------------------------------------------------------
+  
+            IFIT=1,  Single gaussian plus exp. tail.
+  
+            RATIO  is the number of channels from the peak position 
+                   to the join part of the exp. tail. 
+  
+   ---------------------------------------------------------------------
+  
+            IFIT=5,  Single gaussian plus exp tail plus linear tail.
+  
+            RATIO    See IFIT=1.
+            PJON     Number of channels from join point of exp tail to
+                     join point of linear tail. 
+            SLOP1    Slope of linear tail.
+  
+   ---------------------------------------------------------------------- 
+  
+           IFIT=2.   Assymeteric gaussian plus exp tail 
+  
+           RATIO     See IFIT=1.
+           DIST      Asymmetery term,  Sig(left)=DIST*SIG(reference peak) 
+  
+   ---------------------------------------------------------------------- 
+  
+          IFIT=6    See IFIT=2 plus linear tail.
+  
+          PJON      See IFIT=5. 
+          SLOP1     See IFIT=5. 
+  
+   ---------------------------------------------------------------------- 
+  
+          IFIT=3   Double gaussian plus exponential tail. 
+  
+          RATIO    See IFIT=0 
+          DIST     See IFIT=0 
+          PJON     Number of channels from the 2nd gaussian to the
+                   join point of the exp. tail. 
+  
+   -----------------------------------------------------------------------
+  
+  
+   Line 14.  IPAR(k), k=1,10     Free Field Format! 
+  
+             IPAR(k)=0   Extra parameter k is allowed to freely vary. 
+                    =1   Extra parameter k is held constant during the search.
+                    =2   Parameter k is held inside the window defined by 
+                         line 14a.
+  
+   Line 14a.  AVPAR(k) k=1,10 
+                         This line is read only if one or more of the 
+                         IPAR(k) from line 14 is 2. 
+                         Then for each of the parameters where
+                         IPAR(k)=2,  P(k) from line 11 is allowed 
+                         to vary only inside the window defined by: 
+                         P(k) +/- AVPAR(k)
+  
+   Line 15.   AM1,AM2(1),AM3,AM4(1),ANG,E 
+  
+              This is read only for MUL > 0.
+  
+              The masses below are in units of AMU, and are for 
+              the first group.
+  
+              AM1     Mass of incident particle.
+              AM2     Mass of target particle.
+              AM3     Mass of scattered particle. 
+              AM4     Mass of target after scattering.
+              ANG     Scattering angle, in degrees.
+              E       Incident energy (energy of AM1) 
+  
+   Line 15a.  AM2(i),AM4(i)
+                      This is read only for MUL > 1.
+              AM2(i),AM4(i)  Mass of target for group i.
+  
+   Line 16.   DEL(i) i=1,NPEAK
+                      This is read only for MUL >0
+              DEL(i)  Excited state energy in MeV.  The ground state
+                      would be 0.0
+  
+  
+   Line 17.   FP,CALB 
+                      This also only read for MUL >0. 
+              FP      Flight path in meters.
+              CALB    TAC calibration in nano-seconds per channel.
+  
+   Line 18.   -1 0 0 0 0 0 0
+                      This is the end of data card.  It should be 
+                      be repeated at least 4 times. 
+  
+  

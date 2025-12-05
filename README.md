@@ -36,10 +36,8 @@ Building
 
 Compile the Fortran executable:
 
-```bash
-make
-make install
-```
+    make
+    make install
 
 Make install may require sudo
 
@@ -64,9 +62,8 @@ This will:
     Install a launcher script san12 into /usr/local/bin
 
 Run SAN12 from anywhere:
-```bash
-san12
-```
+    
+    san12
 
 Launches GUI
 
@@ -94,10 +91,6 @@ sudo rm /usr/local/bin/san12
 
 Notes
 
-    Python 3.11 gives best long-term stability.
-
-    ROOT is optional unless converting ROOT → DAF.
-
-    The wrapper script sets all required environment variables — no hard-coded paths.
-
-    Works on macOS and Linux.
+Python 3.11 gives best long-term stability.
+ROOT is optional unless converting ROOT → DAF.
+The wrapper script sets all required environment variables — no hard-coded paths.
